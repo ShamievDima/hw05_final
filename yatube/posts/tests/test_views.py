@@ -297,14 +297,14 @@ class PostViewsTests(TestCase):
 
     def test_follow_user(self):
         '''Проверка возможности подписаться и отписаться'''
-        follower_count = Follow.objects.count()
-        Follow.objects.create(
-            user=self.user, author=self.user
-        )
-        self.assertEqual(follower_count + 1, Follow.objects.count())
-        Follow.objects.filter(
-            user=self.user, author=self.user).delete()
-        self.assertEqual(follower_count, Follow.objects.count())
+        another_user = User.objects.create_user(username='admin')
+        self.authorized_client.force_login(another_user)
+        self.authorized_client.get(reverse(
+            'posts:profile_follow', args=[self.user.username]), follow=True)
+        self.assertEqual(Follow.objects.count(), 1)
+        self.authorized_client.get(reverse(
+            'posts:profile_unfollow', args=[self.user.username]), follow=True)
+        self.assertEqual(Follow.objects.count(), 0)
 
     def test_new_post_for_follower_true(self):
         '''Проверка наличия нового поста у подписчиков'''
