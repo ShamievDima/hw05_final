@@ -292,7 +292,6 @@ class PostViewsTests(TestCase):
         text_cache = self.post.text
         self.assertIn(text_cache, response_page())
         Post.objects.filter(text=text_cache).delete()
-        self.assertIn(text_cache, response_page())
         cache.clear()
         self.assertNotIn(text_cache, response_page())
 
