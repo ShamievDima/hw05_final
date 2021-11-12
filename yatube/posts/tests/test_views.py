@@ -64,6 +64,10 @@ class PostViewsTests(TestCase):
         self.assertEqual(post.group, self.group)
         self.assertEqual(post.image, self.post.image)
 
+    def create_follower(self):
+        another_user = User.objects.create_user(username='admin')
+        self.authorized_client.force_login(another_user)
+
     def test_pages_uses_correct_template(self):
         """URL-адрес использует соответствующий шаблон."""
         templates_page_names = {
@@ -296,12 +300,15 @@ class PostViewsTests(TestCase):
         self.assertNotIn(text_cache, response_page())
 
     def test_follow_user(self):
-        '''Проверка возможности подписаться и отписаться'''
-        another_user = User.objects.create_user(username='admin')
-        self.authorized_client.force_login(another_user)
+        '''Проверка возможности подписаться на автора'''
+        self.create_follower()
         self.authorized_client.get(reverse(
             'posts:profile_follow', args=[self.user.username]), follow=True)
         self.assertEqual(Follow.objects.count(), 1)
+
+    def test_unfollow_user(self):
+        '''Проверка возможности отписаться от автора'''
+        self.create_follower()
         self.authorized_client.get(reverse(
             'posts:profile_unfollow', args=[self.user.username]), follow=True)
         self.assertEqual(Follow.objects.count(), 0)
