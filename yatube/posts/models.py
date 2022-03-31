@@ -44,12 +44,20 @@ class Post(models.Model):
 
 
 class Group(models.Model):
-    title = models.CharField(max_length=200)
+    title = models.CharField(
+        max_length=200,
+        verbose_name='Название группы',
+    )
     slug = models.SlugField(max_length=50, unique=True)
-    description = models.TextField()
+    description = models.TextField(verbose_name='Описание группы',)
 
     def __str__(self):
         return self.title
+
+    class Meta:
+        ordering = ['title']
+        verbose_name = 'Сообщество'
+        verbose_name_plural = 'Сообщества'
 
 
 class Comment(models.Model):
@@ -93,3 +101,5 @@ class Follow(models.Model):
         constraints = [models.UniqueConstraint(
             fields=['user', 'author'], name='unique_follow')
         ]
+        verbose_name = 'Подписка'
+        verbose_name_plural = 'Подписки'

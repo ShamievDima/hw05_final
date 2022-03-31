@@ -16,17 +16,16 @@
     Последние обновления на сайте
     {% endblock %}
     </title>
-    <style type="text/css">
-    .tab { margin-left: 40px; }
-    </style>  
   </head>
   <body class="tab">
     <header>
       {% include 'includes/header.html' %}    
     </header>
     <main>
+      <div class="container py-5">
       {% block content %}
       {% endblock %}
+      </div>
     </main>
     <footer>
       {% include 'includes/footer.html' %}
